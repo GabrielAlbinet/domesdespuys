@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "order_product")
 @Getter
 @Setter
 @NoArgsConstructor
