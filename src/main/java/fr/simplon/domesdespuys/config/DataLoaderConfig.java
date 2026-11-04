@@ -28,7 +28,7 @@ public class DataLoaderConfig implements CommandLineRunner {
             Faker faker = new Faker(Locale.of("fr"));
             int maxUser = 20;
 
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < maxUser; i++) {
                 User user = new User();
                 user.setFirstname(faker.name().firstName());
                 user.setLastname(faker.name().lastName());
@@ -37,16 +37,14 @@ public class DataLoaderConfig implements CommandLineRunner {
                         + "@" + faker.internet().domainName() + ".fr";
                 user.setEmail(email);
                 user.setPassword(faker.internet().password(12, 20));
-
-                if (hasProbability(1,3)) {
-
-                }
+                userRepository.save(user);
             }
+            userRepository.flush();
         }
     }
 
     private boolean hasProbability(int expected, int max) {
         Random random = new Random();
-        return random.nextInt(max) >= expected;
+        return random.nextInt(max) <= expected;
     }
 }
