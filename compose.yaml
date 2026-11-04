@@ -1,14 +1,13 @@
 services:
   mariadb:
-    image: mariadb:13.0.2
-    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+    image: mariadb:11.4
     environment:
       MARIADB_ROOT_PASSWORD: root
       MARIADB_DATABASE: db_domedespuys
     ports:
       - "3306:3306"
     volumes:
-      - ./.docker/mariadb:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 10s
@@ -27,3 +26,6 @@ services:
     depends_on:
       mariadb:
         condition: service_healthy
+
+volumes:
+  mariadb_data:

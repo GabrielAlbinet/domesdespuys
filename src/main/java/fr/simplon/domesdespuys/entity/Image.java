@@ -1,53 +1,31 @@
 package fr.simplon.domesdespuys.entity;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "image")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Image {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String path;
+
+    @Column(nullable = false, length = 10)
     private String extension;
-    private boolean defaultImage;
+
+    @Column(nullable = false)
+    private Boolean isDefault = false;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
-
-    public Image() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public String getExtension() {
-        return extension;
-    }
-
-    public void setExtension(String extension) {
-        this.extension = extension;
-    }
-
-    public boolean isDefaultImage() {
-        return defaultImage;
-    }
-
-    public void setDefaultImage(boolean defaultImage) {
-        this.defaultImage = defaultImage;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
 }
