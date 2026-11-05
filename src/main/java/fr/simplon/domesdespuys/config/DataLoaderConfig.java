@@ -24,6 +24,7 @@ public class DataLoaderConfig implements CommandLineRunner {
     private static final int PERIOD_DAYS = 365;
     private static final int MAX_ITEMS_PER_ORDER = 4;
     private static final int MAX_QUANTITY = 5;
+    private static final int PROBA_CANCELLED = 5;
 
     private UserRepository userRepository;
     private BrandRepository brandRepository;
@@ -131,7 +132,7 @@ public class DataLoaderConfig implements CommandLineRunner {
                     product.setLabel(label);
                     product.setSlug(slug);
                     product.setDescription(faker.lorem().paragraph(3));
-                    product.setPrice(BigDecimal.valueOf(500 + faker.random().nextInt(29500), 2));
+                    product.setPrice(BigDecimal.valueOf(500 + faker.random().nextInt(49500), 2));
                     product.setBrand(brands.get(faker.random().nextInt(brands.size())));
                     product.setCreatedAt(randomDate(LocalDateTime.now().minusDays(PERIOD_DAYS)));
                     productRepository.save(product);
@@ -171,13 +172,14 @@ public class DataLoaderConfig implements CommandLineRunner {
 
             for (int i = 0; i < maxOrder; i++) {
                 Address address = addresses.get(faker.random().nextInt(addresses.size()));
+                LocalDateTime createdAt = randomDate(address.getCreatedAt());
 
                 Order order = new Order();
                 order.setNumber(String.format("CMD-%d-%06d", year, i + 1));
-                order.setStatus(faker.options().option(OrderStatus.values()));
+                order.setStatus(randomStatus(createdAt, faker));
                 order.setAddress(address);
                 order.setUser(address.getUser());
-                order.setCreatedAt(randomDate(address.getCreatedAt()));
+                order.setCreatedAt(createdAt);
                 orderRepository.save(order);
             }
             orderRepository.flush();
@@ -207,6 +209,30 @@ public class DataLoaderConfig implements CommandLineRunner {
             }
             orderProductRepository.flush();
         }
+    }
+
+    private OrderStatus randomStatus(LocalDateTime createdAt, Faker faker) {
+        if (0 == faker.random().nextInt(PROBA_CANCELLED)) {
+            return OrderStatus.CANCELLED;
+        }
+
+        double days = Duration.between(createdAt, LocalDateTime.now()).toMinutes() / 1440.0;
+        List<OrderStatus> statuses = new ArrayList<>();
+
+        if (days <= 1) {
+            statuses.add(OrderStatus.PENDING);
+        }
+        if (days <= 2) {
+            statuses.add(OrderStatus.PAID);
+        }
+        if (days >= 1 && days <= 14) {
+            statuses.add(OrderStatus.SHIPPED);
+        }
+        if (days >= 3) {
+            statuses.add(OrderStatus.DELIVERED);
+        }
+
+        return statuses.get(faker.random().nextInt(statuses.size()));
     }
 
     private LocalDateTime randomDate(LocalDateTime start) {
