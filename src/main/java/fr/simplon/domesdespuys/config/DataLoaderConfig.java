@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.Year;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -21,7 +20,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @AllArgsConstructor
 public class DataLoaderConfig implements CommandLineRunner {
 
-    private static final int PERIOD_DAYS = 365;
+    private static final int PERIOD_DAYS = 700;
     private static final int MAX_ITEMS_PER_ORDER = 4;
     private static final int MAX_QUANTITY = 5;
     private static final int PROBA_CANCELLED = 5;
@@ -167,7 +166,6 @@ public class DataLoaderConfig implements CommandLineRunner {
         if (0 == orderRepository.count()) {
             Faker faker = new Faker(Locale.of("fr"));
             List<Address> addresses = addressRepository.findAll();
-            int year = Year.now().getValue();
             int maxOrder = 150;
 
             for (int i = 0; i < maxOrder; i++) {
@@ -175,7 +173,7 @@ public class DataLoaderConfig implements CommandLineRunner {
                 LocalDateTime createdAt = randomDate(address.getCreatedAt());
 
                 Order order = new Order();
-                order.setNumber(String.format("CMD-%d-%06d", year, i + 1));
+                order.setNumber(String.format("CMD-%d-%06d", createdAt.getYear(), i + 1));
                 order.setStatus(randomStatus(createdAt, faker));
                 order.setAddress(address);
                 order.setUser(address.getUser());
