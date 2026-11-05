@@ -33,6 +33,9 @@ public class Address {
     @Column(nullable = false)
     private String country;
 
+    @Column(length = 30)
+    private String phone;
+
     @Column(nullable = false)
     private String firstname;
 

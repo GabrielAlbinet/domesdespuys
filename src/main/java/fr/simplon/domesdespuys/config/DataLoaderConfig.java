@@ -24,6 +24,7 @@ public class DataLoaderConfig implements CommandLineRunner {
     private static final int MAX_ITEMS_PER_ORDER = 4;
     private static final int MAX_QUANTITY = 5;
     private static final int PROBA_CANCELLED = 5;
+    private static final int PROBA_NO_PHONE = 3;
 
     private UserRepository userRepository;
     private BrandRepository brandRepository;
@@ -60,6 +61,7 @@ public class DataLoaderConfig implements CommandLineRunner {
                         + "@" + slugify.slugify(faker.internet().domainName()) + ".fr";
                 user.setEmail(email);
                 user.setPassword(faker.internet().password(12, 20));
+                user.setPhone(randomPhone(faker));
                 user.setCreatedAt(randomDate(LocalDateTime.now().minusDays(PERIOD_DAYS)));
                 userRepository.save(user);
             }
@@ -105,6 +107,7 @@ public class DataLoaderConfig implements CommandLineRunner {
                 address.setCity(faker.address().cityName());
                 address.setZipCode(faker.address().zipCode());
                 address.setCountry("France");
+                address.setPhone(randomPhone(faker));
                 address.setFirstname(user.getFirstname());
                 address.setLastname(user.getLastname());
                 address.setCreatedAt(randomDate(user.getCreatedAt()));
@@ -207,6 +210,14 @@ public class DataLoaderConfig implements CommandLineRunner {
             }
             orderProductRepository.flush();
         }
+    }
+
+    private String randomPhone(Faker faker) {
+        if (0 == faker.random().nextInt(PROBA_NO_PHONE)) {
+            return null;
+        }
+        int prefix = 6 + faker.random().nextInt(2);
+        return "+33" + prefix + String.format("%08d", faker.random().nextInt(100_000_000));
     }
 
     private OrderStatus randomStatus(LocalDateTime createdAt, Faker faker) {
