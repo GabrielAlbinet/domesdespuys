@@ -22,6 +22,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class DataLoaderConfig implements CommandLineRunner {
 
     private static final int PERIOD_DAYS = 365;
+    private static final int MAX_ITEMS_PER_ORDER = 4;
+    private static final int MAX_QUANTITY = 5;
 
     private UserRepository userRepository;
     private BrandRepository brandRepository;
@@ -29,6 +31,7 @@ public class DataLoaderConfig implements CommandLineRunner {
     private ProductRepository productRepository;
     private ImageRepository imageRepository;
     private OrderRepository orderRepository;
+    private OrderProductRepository orderProductRepository;
 
     @Override
     public void run(String @NonNull ... args) {
@@ -38,6 +41,7 @@ public class DataLoaderConfig implements CommandLineRunner {
         createProducts();
         createImages();
         createOrders();
+        createOrderProducts();
     }
 
     private void createUsers() {
@@ -177,6 +181,31 @@ public class DataLoaderConfig implements CommandLineRunner {
                 orderRepository.save(order);
             }
             orderRepository.flush();
+        }
+    }
+
+    private void createOrderProducts() {
+        if (0 == orderProductRepository.count()) {
+            Faker faker = new Faker(Locale.of("fr"));
+            List<Order> orders = orderRepository.findAll();
+            List<Product> products = productRepository.findAll();
+
+            for (Order order : orders) {
+                int maxItems = 1 + faker.random().nextInt(MAX_ITEMS_PER_ORDER);
+                int start = faker.random().nextInt(products.size());
+
+                for (int i = 0; i < maxItems; i++) {
+                    Product product = products.get((start + i) % products.size());
+
+                    OrderProduct line = new OrderProduct();
+                    line.setOrder(order);
+                    line.setProduct(product);
+                    line.setQuantity(1 + faker.random().nextInt(MAX_QUANTITY));
+                    line.setPrice(product.getPrice());
+                    orderProductRepository.save(line);
+                }
+            }
+            orderProductRepository.flush();
         }
     }
 
