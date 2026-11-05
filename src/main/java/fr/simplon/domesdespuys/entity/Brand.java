@@ -1,5 +1,6 @@
 package fr.simplon.domesdespuys.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ public class Brand {
     @Column(nullable = false, unique = true)
     private String slug;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "brand")
     private List<Product> products = new ArrayList<>();
 }

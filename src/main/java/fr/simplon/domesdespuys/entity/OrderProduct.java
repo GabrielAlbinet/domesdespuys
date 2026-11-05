@@ -1,5 +1,6 @@
 package fr.simplon.domesdespuys.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,10 +24,11 @@ public class OrderProduct {
     @Column(nullable = false, precision = 7, scale = 2)
     private BigDecimal price;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
-
+    
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
