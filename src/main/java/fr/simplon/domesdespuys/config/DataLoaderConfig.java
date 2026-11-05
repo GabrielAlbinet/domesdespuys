@@ -3,6 +3,7 @@ package fr.simplon.domesdespuys.config;
 import com.github.javafaker.Faker;
 import com.github.slugify.Slugify;
 import fr.simplon.domesdespuys.entity.*;
+import fr.simplon.domesdespuys.enums.OrderStatus;
 import fr.simplon.domesdespuys.repository.*;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -10,17 +11,24 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.Year;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Component
 @AllArgsConstructor
 public class DataLoaderConfig implements CommandLineRunner {
+
+    private static final int PERIOD_DAYS = 365;
 
     private UserRepository userRepository;
     private BrandRepository brandRepository;
     private AddressRepository addressRepository;
     private ProductRepository productRepository;
     private ImageRepository imageRepository;
+    private OrderRepository orderRepository;
 
     @Override
     public void run(String @NonNull ... args) {
@@ -29,13 +37,14 @@ public class DataLoaderConfig implements CommandLineRunner {
         createAddress();
         createProducts();
         createImages();
+        createOrders();
     }
 
     private void createUsers() {
         if (0 == userRepository.count()) {
             Faker faker = new Faker(Locale.of("fr"));
             Slugify slugify = Slugify.builder().build();
-            int maxUser = 75;
+            int maxUser = 80;
 
             for (int i = 0; i < maxUser; i++) {
                 User user = new User();
@@ -47,6 +56,7 @@ public class DataLoaderConfig implements CommandLineRunner {
                         + "@" + slugify.slugify(faker.internet().domainName()) + ".fr";
                 user.setEmail(email);
                 user.setPassword(faker.internet().password(12, 20));
+                user.setCreatedAt(randomDate(LocalDateTime.now().minusDays(PERIOD_DAYS)));
                 userRepository.save(user);
             }
             userRepository.flush();
@@ -58,7 +68,7 @@ public class DataLoaderConfig implements CommandLineRunner {
             Faker faker = new Faker(Locale.of("fr"));
             Slugify slugify = Slugify.builder().build();
             Set<String> slugs = new HashSet<>();
-            int maxBrand = 50;
+            int maxBrand = 55;
 
             while (slugs.size() < maxBrand) {
                 String label = faker.company().name();
@@ -93,6 +103,7 @@ public class DataLoaderConfig implements CommandLineRunner {
                 address.setCountry("France");
                 address.setFirstname(user.getFirstname());
                 address.setLastname(user.getLastname());
+                address.setCreatedAt(randomDate(user.getCreatedAt()));
                 addressRepository.save(address);
             }
             addressRepository.flush();
@@ -116,8 +127,9 @@ public class DataLoaderConfig implements CommandLineRunner {
                     product.setLabel(label);
                     product.setSlug(slug);
                     product.setDescription(faker.lorem().paragraph(3));
-                    product.setPrice(BigDecimal.valueOf(500 + faker.random().nextInt(49500), 2));
+                    product.setPrice(BigDecimal.valueOf(500 + faker.random().nextInt(29500), 2));
                     product.setBrand(brands.get(faker.random().nextInt(brands.size())));
+                    product.setCreatedAt(randomDate(LocalDateTime.now().minusDays(PERIOD_DAYS)));
                     productRepository.save(product);
                 }
             }
@@ -144,5 +156,32 @@ public class DataLoaderConfig implements CommandLineRunner {
             }
             imageRepository.flush();
         }
+    }
+
+    private void createOrders() {
+        if (0 == orderRepository.count()) {
+            Faker faker = new Faker(Locale.of("fr"));
+            List<Address> addresses = addressRepository.findAll();
+            int year = Year.now().getValue();
+            int maxOrder = 150;
+
+            for (int i = 0; i < maxOrder; i++) {
+                Address address = addresses.get(faker.random().nextInt(addresses.size()));
+
+                Order order = new Order();
+                order.setNumber(String.format("CMD-%d-%06d", year, i + 1));
+                order.setStatus(faker.options().option(OrderStatus.values()));
+                order.setAddress(address);
+                order.setUser(address.getUser());
+                order.setCreatedAt(randomDate(address.getCreatedAt()));
+                orderRepository.save(order);
+            }
+            orderRepository.flush();
+        }
+    }
+
+    private LocalDateTime randomDate(LocalDateTime start) {
+        long seconds = Duration.between(start, LocalDateTime.now()).getSeconds();
+        return start.plusSeconds(ThreadLocalRandom.current().nextLong(Math.max(1, seconds)));
     }
 }
