@@ -33,9 +33,9 @@ public class Product {
     @JsonView(productView.Description.class)
     private String description;
 
-    @Column(nullable = false, precision = 7, scale = 2)
+    @Column(nullable = false)
     @JsonView(productView.Price.class)
-    private BigDecimal price;
+    private Integer price;
 
     @Column(nullable = false, unique = true)
     @JsonView(productView.Slug.class)

@@ -25,9 +25,9 @@ public class OrderProduct {
     @JsonView(orderProductView.Quantity.class)
     private Integer quantity;
 
-    @Column(nullable = false, precision = 7, scale = 2)
+    @Column(nullable = false)
     @JsonView(orderProductView.Price.class)
-    private BigDecimal price;
+    private Integer price;
 
     @JsonIgnore
     @ManyToOne

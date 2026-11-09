@@ -134,7 +134,7 @@ public class DataLoaderConfig implements CommandLineRunner {
                     product.setLabel(label);
                     product.setSlug(slug);
                     product.setDescription(faker.lorem().paragraph(3));
-                    product.setPrice(BigDecimal.valueOf(500 + faker.random().nextInt(49500), 2));
+                    product.setPrice(500 + faker.random().nextInt(49500));
                     product.setBrand(brands.get(faker.random().nextInt(brands.size())));
                     product.setCreatedAt(randomDate(LocalDateTime.now().minusDays(PERIOD_DAYS)));
                     productRepository.save(product);
