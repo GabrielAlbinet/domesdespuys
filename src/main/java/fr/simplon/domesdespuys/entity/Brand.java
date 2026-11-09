@@ -1,6 +1,9 @@
 package fr.simplon.domesdespuys.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
+import fr.simplon.domesdespuys.view.brandView;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,17 +20,21 @@ public class Brand {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(brandView.Id.class)
     private Long id;
 
     @Column(nullable = false, unique = true)
+    @JsonView(brandView.Label.class)
     private String label;
 
+    @JsonView(brandView.Logo.class)
     private String logo;
 
     @Column(nullable = false, unique = true)
+    @JsonView(brandView.Slug.class)
     private String slug;
 
-    @JsonIgnore
+    @JsonView(brandView.Products.class)
     @OneToMany(mappedBy = "brand")
     private List<Product> products = new ArrayList<>();
 }
