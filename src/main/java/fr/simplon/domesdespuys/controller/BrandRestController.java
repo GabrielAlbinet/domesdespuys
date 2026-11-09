@@ -27,6 +27,7 @@ public class BrandRestController {
     }
 
     @GetMapping("/{id}")
+    @JsonView(brandView.BrandDetailView.class)
     public Optional<Brand> getBrandById(@PathVariable Long id) {
         return brandRepository.findById(id);
     }

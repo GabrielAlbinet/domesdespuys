@@ -53,11 +53,11 @@ public class User {
     @JsonView(userView.CreatedAt.class)
     private LocalDateTime createdAt;
 
-    @JsonIgnore
+    @JsonView(userView.Addresses.class)
     @OneToMany(mappedBy = "user")
     private List<Address> addresses = new ArrayList<>();
 
-    @JsonIgnore
+    @JsonView(userView.Orders.class)
     @OneToMany(mappedBy = "user")
     private List<Order> orders = new ArrayList<>();
 

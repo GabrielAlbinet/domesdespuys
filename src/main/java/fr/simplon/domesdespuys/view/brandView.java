@@ -8,7 +8,7 @@ public class brandView {
     public interface Slug {}
     public interface Products {}
 
-    public interface BrandListView extends Label, Slug {}
+    public interface BrandListView extends Label, Slug, Id, Logo {}
     public interface BrandDetailView extends
             BrandListView,
             Logo, Products,

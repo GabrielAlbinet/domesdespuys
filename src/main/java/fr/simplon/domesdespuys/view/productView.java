@@ -10,7 +10,8 @@ public class productView {
     public interface Brand {}
     public interface Images {}
 
-    public interface ProductListView extends Label, Price, Slug {}
-    public interface ProductDetailView extends ProductListView, Description, Brand, Images, imageView.ImageListView {}
+    public interface ProductListView extends Id, Label, Price, Slug {}
+    public interface ProductDetailView extends ProductListView, Description, Brand, Images,
+            brandView.BrandListView, imageView.ImageListView {}
 
 }
