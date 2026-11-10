@@ -1,7 +1,12 @@
 package fr.simplon.domesdespuys.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class UserPutDTO {
-    public String firstname;
-    public String lastname;
-    public String phone;
+    private String firstname;
+    private String lastname;
+    private String phone;
 }

@@ -4,7 +4,7 @@ import fr.simplon.domesdespuys.dto.OrderProductDTO;
 import fr.simplon.domesdespuys.entity.Order;
 import fr.simplon.domesdespuys.entity.OrderProduct;
 
-public interface iCreateOrderProduct {
+public interface iOrderProductService {
 
     OrderProduct create(OrderProductDTO dto, Order order);
 

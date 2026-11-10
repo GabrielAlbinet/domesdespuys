@@ -57,9 +57,9 @@ public class BrandServiceImpl implements iBrand {
     }
 
     private void dtoToObject(BrandDTO dto, Brand brand) {
-        brand.setLabel(dto.label);
-        brand.setLogo(dto.logo);
-        brand.setSlug(slugify.slugify(dto.label));
+        brand.setLabel(dto.getLabel());
+        brand.setLogo(dto.getLogo());
+        brand.setSlug(slugify.slugify(dto.getLabel()));
         brandRepository.saveAndFlush(brand);
     }
 

@@ -1,7 +1,12 @@
 package fr.simplon.domesdespuys.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class OrderProductDTO {
-    public int qty;
-    public int price;
-    public Long idProduct;
+    private int qty;
+    private int price;
+    private Long idProduct;
 }

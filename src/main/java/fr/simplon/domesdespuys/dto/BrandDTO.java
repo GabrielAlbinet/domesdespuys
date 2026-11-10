@@ -1,6 +1,11 @@
 package fr.simplon.domesdespuys.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class BrandDTO {
-    public String label;
-    public String logo;
+    private String label;
+    private String logo;
 }
