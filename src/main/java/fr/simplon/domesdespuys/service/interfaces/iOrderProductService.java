@@ -6,6 +6,6 @@ import fr.simplon.domesdespuys.entity.OrderProduct;
 
 public interface iOrderProductService {
 
-    OrderProduct create(OrderProductDTO dto, Order order);
+    OrderProduct createOrderProduct(OrderProductDTO dto, Order order);
 
 }
