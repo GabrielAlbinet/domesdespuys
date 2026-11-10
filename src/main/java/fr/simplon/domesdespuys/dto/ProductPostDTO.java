@@ -12,5 +12,5 @@ public class ProductPostDTO {
     private String description;
     private int price;
     private Long idBrand;
-    private List<String> images;
+    private List<ImageDTO> images;
 }
