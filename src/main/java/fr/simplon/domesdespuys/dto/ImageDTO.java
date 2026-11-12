@@ -8,5 +8,5 @@ import lombok.Setter;
 public class ImageDTO {
     private String path;
     private String extension;
-    private boolean isDefault;
+    private Boolean isDefault;
 }
