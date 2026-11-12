@@ -19,9 +19,9 @@ public class ImageServiceImpl implements iImage {
         Image image = new Image();
         image.setProduct(product);
         image.setPath(dto.getPath());
-        image.setExtension(dto.getExtension());
+        image.setExtension("png");
         image.setIsDefault(Boolean.TRUE.equals(dto.getIsDefault()));
-        return imageRepository.save(image);
+        return imageRepository.saveAndFlush(image);
     }
 
     @Override
