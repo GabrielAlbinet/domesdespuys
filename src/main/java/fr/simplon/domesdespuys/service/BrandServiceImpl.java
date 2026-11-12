@@ -51,13 +51,12 @@ public class BrandServiceImpl implements iBrand {
 
     @Override
     public boolean delete(String id) {
-        try {
-            brandRepository.deleteById(Long.parseLong(id));
-            return true;
-        } catch (NumberFormatException e) {
-            System.out.println(e.getMessage());
+        Brand brand = getById(id);
+        if (brand == null) {
             return false;
         }
+        brandRepository.delete(brand);
+        return true;
     }
 
     private void dtoToObject(BrandDTO dto, Brand brand) {
