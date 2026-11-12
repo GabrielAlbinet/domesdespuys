@@ -16,6 +16,9 @@ public class ImageServiceImpl implements iImage {
 
     @Override
     public Image create(ImageDTO dto, Product product) {
+        if (product == null) {
+            return null;
+        }
         Image image = new Image();
         image.setProduct(product);
         image.setPath(dto.getPath());
