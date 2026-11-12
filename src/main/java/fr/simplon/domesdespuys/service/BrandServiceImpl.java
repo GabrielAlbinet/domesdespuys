@@ -31,9 +31,13 @@ public class BrandServiceImpl implements iBrand {
 
     @Override
     public Brand getById(String id) {
-        return brandRepository
-                .findById(Long.parseLong(id))
-                .orElse(null);
+        try {
+            return brandRepository
+                    .findById(Long.parseLong(id))
+                    .orElse(null);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     @Override
