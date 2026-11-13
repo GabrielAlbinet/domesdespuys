@@ -1,5 +1,7 @@
 package fr.simplon.domesdespuys.dto;
 
+import fr.simplon.domesdespuys.customValidator.iExistingId;
+import fr.simplon.domesdespuys.repository.BrandRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -25,6 +27,7 @@ public class ProductPostDTO {
     private int price;
 
     @NotNull(message = "Il faut une marque")
+    @iExistingId(repository = BrandRepository.class, message = "Cette marque n'existe pas")
     private Long idBrand;
 
     @Valid
