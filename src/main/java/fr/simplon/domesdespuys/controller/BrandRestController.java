@@ -38,7 +38,7 @@ public class BrandRestController {
     @GetMapping(path = "/slug/{slug}")
     @JsonView(brandView.BrandDetailView.class)
     public ResponseEntity<Brand> getBrandBySlug(@PathVariable String slug) {
-        return brandRepository.findBySlug(slug)
+        return brandRepository.findBySlugAndDeletedFalse(slug)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

@@ -34,6 +34,9 @@ public class Brand {
     @JsonView(brandView.Slug.class)
     private String slug;
 
+    @Column(nullable = false)
+    private boolean deleted = false;
+
     @JsonView(brandView.Products.class)
     @OneToMany(mappedBy = "brand")
     private List<Product> products = new ArrayList<>();

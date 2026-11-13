@@ -8,6 +8,7 @@ import fr.simplon.domesdespuys.repository.BrandRepository;
 import fr.simplon.domesdespuys.repository.OrderProductRepository;
 import fr.simplon.domesdespuys.repository.ProductRepository;
 import fr.simplon.domesdespuys.service.interfaces.iBrand;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ public class BrandServiceImpl implements iBrand {
 
     @Override
     public List<Brand> getCollection() {
-        return brandRepository.findAll();
+        return brandRepository.findAllByDeletedFalse();
     }
 
     @Override
@@ -36,7 +37,10 @@ public class BrandServiceImpl implements iBrand {
 
     @Override
     public Brand getById(String id) {
-        return brandRepository.findById(Long.parseLong(id)).orElse(null);
+        return brandRepository
+                .findById(Long.parseLong(id))
+                .filter(brand -> !brand.isDeleted())
+                .orElse(null);
     }
 
     @Override
@@ -49,16 +53,19 @@ public class BrandServiceImpl implements iBrand {
     }
 
     @Override
+    @Transactional
     public boolean delete(String id) {
         Brand brand = getById(id);
         if (brand == null) {
             return false;
-        };
-        if (orderProductRepository.existsByProductBrand(brand)) {
-            throw new OrderProductBrandException("Un produit de cette marque a déjà été commandé");
         }
-        productRepository.deleteAllByBrand(brand);
-        brandRepository.delete(brand);
+        if (orderProductRepository.existsByProductBrand(brand)) {
+            brand.setDeleted(true);
+            brandRepository.saveAndFlush(brand);
+        } else {
+            productRepository.deleteAllByBrand(brand);
+            brandRepository.delete(brand);
+        }
         return true;
     }
 

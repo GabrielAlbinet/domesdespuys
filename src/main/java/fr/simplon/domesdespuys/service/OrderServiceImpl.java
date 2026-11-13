@@ -88,6 +88,9 @@ public class OrderServiceImpl implements iOrder {
         if (idAddress == null) {
             return null;
         }
-        return addressRepository.findById(idAddress).orElse(null);
+        return addressRepository
+                .findById(idAddress)
+                .filter(address -> !address.isDeleted())
+                .orElse(null);
     }
 }

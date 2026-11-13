@@ -58,6 +58,9 @@ public class Address {
     @JsonView(addressView.CreatedAt.class)
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
+    private boolean deleted = false;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

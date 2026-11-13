@@ -79,7 +79,7 @@ public class ProductServiceImpl implements iProduct {
         if (idBrand == null) {
             return null;
         }
-        return brandRepository.findById(idBrand).orElse(null);
+        return brandRepository.findById(idBrand).filter(brand -> !brand.isDeleted()).orElse(null);
     }
 
     private void fill(Product product, Brand brand, String label, String description, int price) {

@@ -4,6 +4,7 @@ import fr.simplon.domesdespuys.dto.AddressDTO;
 import fr.simplon.domesdespuys.entity.Address;
 import fr.simplon.domesdespuys.entity.User;
 import fr.simplon.domesdespuys.repository.AddressRepository;
+import fr.simplon.domesdespuys.repository.OrderRepository;
 import fr.simplon.domesdespuys.repository.UserRepository;
 import fr.simplon.domesdespuys.service.interfaces.iAddress;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ public class AddressServiceImpl implements iAddress {
 
     private AddressRepository addressRepository;
     private UserRepository userRepository;
+    private OrderRepository orderRepository;
 
     @Override
     public Address create(AddressDTO dto) {
@@ -43,23 +45,24 @@ public class AddressServiceImpl implements iAddress {
         if (address == null) {
             return false;
         }
-        addressRepository.delete(address);
+        if (orderRepository.existsByAddress(address)) {
+            address.setDeleted(true);
+            addressRepository.saveAndFlush(address);
+        } else {
+            addressRepository.delete(address);
+        }
         return true;
     }
 
     private User getDefaultUser() {
-
         return userRepository.findById(1L).orElseThrow();
     }
 
     private Address findById(String id) {
-        try {
-            return addressRepository
-                    .findById(Long.parseLong(id))
-                    .orElse(null);
-        } catch (NumberFormatException e) {
-            return null;
-        }
+        return addressRepository
+                .findById(Long.parseLong(id))
+                .filter(address -> !address.isDeleted())
+                .orElse(null);
     }
 
     private void dtoToObject(AddressDTO dto, Address address) {
