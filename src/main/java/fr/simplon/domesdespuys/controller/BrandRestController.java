@@ -6,6 +6,7 @@ import fr.simplon.domesdespuys.entity.Brand;
 import fr.simplon.domesdespuys.repository.BrandRepository;
 import fr.simplon.domesdespuys.service.interfaces.iBrand;
 import fr.simplon.domesdespuys.view.brandView;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ public class BrandRestController {
 
     @PostMapping
     @JsonView(brandView.BrandListView.class)
-    public ResponseEntity<Brand> createBrand(@RequestBody BrandDTO dto) {
+    public ResponseEntity<Brand> createBrand(@Valid @RequestBody BrandDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(brandService.create(dto));
     }
 

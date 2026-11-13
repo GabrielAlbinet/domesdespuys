@@ -48,6 +48,7 @@ public class AddressServiceImpl implements iAddress {
     }
 
     private User getDefaultUser() {
+
         return userRepository.findById(1L).orElseThrow();
     }
 
