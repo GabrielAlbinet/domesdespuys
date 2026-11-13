@@ -3,7 +3,10 @@ package fr.simplon.domesdespuys.service;
 import com.github.slugify.Slugify;
 import fr.simplon.domesdespuys.dto.BrandDTO;
 import fr.simplon.domesdespuys.entity.Brand;
+import fr.simplon.domesdespuys.exception.OrderProductBrandException;
 import fr.simplon.domesdespuys.repository.BrandRepository;
+import fr.simplon.domesdespuys.repository.OrderProductRepository;
+import fr.simplon.domesdespuys.repository.ProductRepository;
 import fr.simplon.domesdespuys.service.interfaces.iBrand;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,8 @@ import java.util.List;
 public class BrandServiceImpl implements iBrand {
 
     private BrandRepository brandRepository;
+    private OrderProductRepository orderProductRepository;
+    private ProductRepository productRepository;
     private final Slugify slugify = Slugify.builder().build();
 
     @Override
@@ -48,7 +53,11 @@ public class BrandServiceImpl implements iBrand {
         Brand brand = getById(id);
         if (brand == null) {
             return false;
+        };
+        if (orderProductRepository.existsByProductBrand(brand)) {
+            throw new OrderProductBrandException("Un produit de cette marque a déjà été commandé");
         }
+        productRepository.deleteAllByBrand(brand);
         brandRepository.delete(brand);
         return true;
     }

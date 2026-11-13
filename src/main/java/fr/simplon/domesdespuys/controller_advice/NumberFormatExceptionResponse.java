@@ -1,5 +1,7 @@
 package fr.simplon.domesdespuys.controller_advice;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import fr.simplon.domesdespuys.view.ExceptionView;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class NumberFormatExceptionResponse {
 
     @ResponseBody
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(NumberFormatException.class)
     public ExceptionResponse getResponse(NumberFormatException e){
         return new ExceptionResponse(
