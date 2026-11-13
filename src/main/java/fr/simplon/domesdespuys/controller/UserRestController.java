@@ -7,6 +7,7 @@ import fr.simplon.domesdespuys.entity.User;
 import fr.simplon.domesdespuys.repository.UserRepository;
 import fr.simplon.domesdespuys.service.interfaces.iUser;
 import fr.simplon.domesdespuys.view.userView;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,13 +32,13 @@ public class UserRestController {
 
     @PostMapping
     @JsonView(userView.UserDetailView.class)
-    public ResponseEntity<User> createUser(@RequestBody UserPostDTO dto) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody UserPostDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(dto));
     }
 
     @PutMapping(path = "/{id}")
     @JsonView(userView.UserDetailView.class)
-    public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody UserPutDTO dto) {
+    public ResponseEntity<User> updateUser(@PathVariable String id, @Valid @RequestBody UserPutDTO dto) {
         User user = userService.update(id, dto);
         return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
     }

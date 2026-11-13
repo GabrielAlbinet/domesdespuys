@@ -8,6 +8,7 @@ import fr.simplon.domesdespuys.entity.Product;
 import fr.simplon.domesdespuys.service.interfaces.iImage;
 import fr.simplon.domesdespuys.view.imageView;
 import fr.simplon.domesdespuys.view.productView;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class ImageRestController {
 
     @PostMapping
     @JsonView(imageView.ImageListView.class)
-    public ResponseEntity<Image> createImage(@RequestBody ImageDTO dto, Product product) {
+    public ResponseEntity<Image> createImage(@Valid @RequestBody ImageDTO dto, Product product) {
         Image image = imageService.create(dto, product);
         return image == null ? ResponseEntity.badRequest().build() : ResponseEntity.status(HttpStatus.CREATED).body(image);
     }

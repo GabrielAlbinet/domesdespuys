@@ -51,7 +51,7 @@ public class BrandRestController {
 
     @PutMapping(path = "/{id}")
     @JsonView(brandView.BrandListView.class)
-    public ResponseEntity<Brand> updateBrand(@PathVariable String id, @RequestBody BrandDTO dto) {
+    public ResponseEntity<Brand> updateBrand(@PathVariable String id, @Valid @RequestBody BrandDTO dto) {
         Brand brand = brandService.update(id, dto);
         return brand == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(brand);
     }

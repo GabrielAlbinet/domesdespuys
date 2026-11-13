@@ -8,6 +8,7 @@ import fr.simplon.domesdespuys.repository.ProductRepository;
 import fr.simplon.domesdespuys.service.interfaces.iProduct;
 import fr.simplon.domesdespuys.view.brandView;
 import fr.simplon.domesdespuys.view.productView;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,14 +47,14 @@ public class ProductRestController {
 
     @PostMapping
     @JsonView(productView.ProductDetailView.class)
-    public ResponseEntity<Product> createProduct(@RequestBody ProductPostDTO dto) {
+    public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductPostDTO dto) {
         Product product = productService.create(dto);
         return product == null ? ResponseEntity.badRequest().build() : ResponseEntity.status(HttpStatus.CREATED).body(product);
     }
 
     @PutMapping(path = "/{id}")
     @JsonView(productView.ProductDetailView.class)
-    public ResponseEntity<Product> updateProduct(@PathVariable String id, @RequestBody ProductPutDTO dto) {
+    public ResponseEntity<Product> updateProduct(@PathVariable String id, @Valid @RequestBody ProductPutDTO dto) {
         Product product = productService.update(id, dto);
         return product == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(product);
     }

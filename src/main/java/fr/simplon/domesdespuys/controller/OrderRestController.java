@@ -7,6 +7,7 @@ import fr.simplon.domesdespuys.entity.Order;
 import fr.simplon.domesdespuys.repository.OrderRepository;
 import fr.simplon.domesdespuys.service.interfaces.iOrder;
 import fr.simplon.domesdespuys.view.orderView;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,14 +38,14 @@ public class OrderRestController {
 
     @PostMapping
     @JsonView(orderView.OrderDetailView.class)
-    public ResponseEntity<Order> createOrder(@RequestBody OrderPostDTO dto) {
+    public ResponseEntity<Order> createOrder(@Valid @RequestBody OrderPostDTO dto) {
         Order order = orderService.create(dto);
         return order == null ? ResponseEntity.badRequest().build() : ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
 
     @PutMapping(path = "/{id}")
     @JsonView(orderView.OrderDetailView.class)
-    public ResponseEntity<Order> updateOrder(@PathVariable String id, @RequestBody OrderPutDTO dto) {
+    public ResponseEntity<Order> updateOrder(@PathVariable String id, @Valid @RequestBody OrderPutDTO dto) {
         Order order = orderService.update(id, dto);
         return order == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(order);
     }

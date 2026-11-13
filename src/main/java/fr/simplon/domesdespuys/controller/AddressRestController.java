@@ -6,6 +6,7 @@ import fr.simplon.domesdespuys.dto.AddressDTO;
 import fr.simplon.domesdespuys.entity.Address;
 import fr.simplon.domesdespuys.service.interfaces.iAddress;
 import fr.simplon.domesdespuys.view.addressView;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +21,13 @@ public class AddressRestController {
 
     @PostMapping
     @JsonView(addressView.AddressDetailView.class)
-    public ResponseEntity<Address> createAddress(@RequestBody AddressDTO dto) {
+    public ResponseEntity<Address> createAddress(@Valid @RequestBody AddressDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(addressService.create(dto));
     }
 
     @PutMapping(path = "/{id}")
     @JsonView(addressView.AddressDetailView.class)
-    public ResponseEntity<Address> updateAddress(@PathVariable String id, @RequestBody AddressDTO dto) {
+    public ResponseEntity<Address> updateAddress(@PathVariable String id, @Valid @RequestBody AddressDTO dto) {
         Address address = addressService.update(id, dto);
         return address == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(address);
     }
